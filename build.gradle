@@ -1,0 +1,43 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.7"
+  }
+}
+
+apply plugin: "com.gradle.plugin-publish"
+
+sourceCompatibility = 1.8
+
+version = "1.0"
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile gradleApi()
+  compile localGroovy()
+  testCompile 'junit:junit:4.12'
+  testCompile gradleTestKit()
+}
+
+pluginBundle {
+  website = 'https://github.com/b3er/gradle-local-properties-plugin'
+  vcsUrl = 'https://github.com/b3er/gradle-local-properties-plugin'
+  description = 'Gradle plugin for reading properties from local.properties file.'
+  tags = ['local', 'properties']
+
+  plugins {
+    localPropertiesPlugin {
+      id = 'com.github.b3er.local.properties'
+      displayName = 'Gradle local properties plugin'
+    }
+  }
+}
