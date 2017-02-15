@@ -36,5 +36,9 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
 # Local properties
 local.properties
+
+# Avoid ignoring tests
+!src/test/resources/local.properties
