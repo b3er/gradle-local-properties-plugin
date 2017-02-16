@@ -15,21 +15,31 @@ class LocalPropertiesPluginTest {
 
   @Before
   void setup() throws IOException {
-    def projectRootFolder = projectRoot.newFolder()
+    def projectFolder = projectRoot.newFolder()
+    def parentProjectFolder = projectRoot.newFolder()
     def builder = new AntBuilder()
     builder.copy(file: 'src/test/resources/local.properties',
-            tofile: "${projectRootFolder}/local.properties")
+            tofile: "${projectFolder}/local.properties")
+    builder.copy(file: 'src/test/resources/root-local.properties',
+            tofile: "${parentProjectFolder}/local.properties")
 
     project = ProjectBuilder
             .builder()
             .withName("testProject")
-            .withProjectDir(projectRootFolder).build()
+            .withProjectDir(projectFolder)
+            .withParent(ProjectBuilder.builder()
+            .withName("testParentProject")
+            .withProjectDir(parentProjectFolder)
+            .build())
+            .build()
   }
 
   @Test
   void testAddProperties() {
     project.apply plugin: 'com.github.b3er.local.properties'
     Assert.assertTrue(project.hasProperty("LOCAL_PROPERTY"))
+    Assert.assertTrue(project.hasProperty("ROOT_LOCAL_PROPERTY"))
     Assert.assertEquals(project.property("LOCAL_PROPERTY"), "local_property")
+    Assert.assertEquals(project.property("ROOT_LOCAL_PROPERTY"), "root_local_property")
   }
 }

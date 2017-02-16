@@ -8,17 +8,37 @@ import org.gradle.api.Project
  * file from project dir and merge them with existing properties
  */
 class LocalPropertiesPlugin implements Plugin<Project> {
+
   @Override
   void apply(Project project) {
-    def localPropertiesFile = project.file("local.properties")
-    if (localPropertiesFile.exists()) {
-      localPropertiesFile.withInputStream {
-        def properties = new Properties()
-        properties.load(it)
-        properties.stringPropertyNames().each {
-          project.ext[it] = properties.getProperty(it)
+    collectFiles(project).reverseEach { file ->
+      if (file?.exists()) {
+        file.withInputStream {
+          def properties = new Properties()
+          //noinspection GroovyAssignabilityCheck
+          properties.load(it)
+          properties.stringPropertyNames().each {
+            project.ext[it] = properties.getProperty(it)
+          }
         }
       }
     }
   }
+
+  /**
+   * Collect files from project and all its parents
+   * @param project to collect files from
+   * @return list of project files
+   */
+  private static def collectFiles(Project project) {
+    def files = []
+    while (project != null) {
+      files.add project.file("local.properties")
+      project = project.parent
+    }
+    return files
+  }
 }
+
+
+

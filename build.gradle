@@ -16,7 +16,8 @@ apply plugin: "com.gradle.plugin-publish"
 
 sourceCompatibility = 1.8
 
-version = "1.0"
+version = "1.1"
+
 repositories {
   mavenCentral()
 }
@@ -25,13 +26,13 @@ dependencies {
   compile gradleApi()
   compile localGroovy()
   testCompile 'junit:junit:4.12'
-  testCompile gradleTestKit()
 }
 
 pluginBundle {
   website = 'https://github.com/b3er/gradle-local-properties-plugin'
   vcsUrl = 'https://github.com/b3er/gradle-local-properties-plugin'
-  description = 'Gradle plugin for reading properties from local.properties file.'
+  description = 'Gradle plugin for reading properties from local.properties file' +
+          ' of project and its parents.'
   tags = ['local', 'properties']
 
   plugins {
